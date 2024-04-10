@@ -1,5 +1,18 @@
 <x-app-layout>
     <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+        <!-- create a success session before the form  -->
+        @if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+            <strong class="font-bold">{{ __('Success!') }}</strong>
+            <span class="block sm:inline">{{ session('success') }}</span>
+            <!-- making the session disappear after a few seconds -->
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                <svg onclick="this.parentElement.remove()" class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <title>{{ __('Close') }}</title>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.95 5.05a.75.75 0 011.06 1.06L11.06 12l4.95 4.95a.75.75 0 11-1.06 1.06L10 13.06l-4.95 4.95a.75.75 0 01-1.06-1.06L8.94 12 4.05 7.05a.75.75 0 011.06-1.06L10 10.94l4.95-4.95z"></path>
+                </svg>
+        </div>
+        @endif
         <form method="POST" action="{{ route('chirps.store') }}">
             @csrf
             <textarea name="message" placeholder="{{ __('What\'s on your mind?') }}" class="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm">{{ old('message') }}</textarea>
@@ -58,6 +71,19 @@
                                     {{ __('Edit') }}
 
                                 </x-dropdown-link>
+                                <form method="POST" action="{{ route('chirps.destroy', $chirp) }}">
+
+                                    @csrf
+
+                                    @method('delete')
+
+                                    <x-dropdown-link :href="route('chirps.destroy', $chirp)" onclick="event.preventDefault(); this.closest('form').submit();">
+
+                                        {{ __('Delete') }}
+
+                                    </x-dropdown-link>
+
+                                </form>
 
                             </x-slot>
 
@@ -81,5 +107,6 @@
             @endforelse
 
         </div>
+       
     </div>
 </x-app-layout>
